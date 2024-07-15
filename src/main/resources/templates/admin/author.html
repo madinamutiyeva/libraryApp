@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>Authors Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/author/books}">Books</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/author/publishers}">Publishers</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Authors</a>
+            </li>
+        </ul>
+        <span class="navbar-text">
+            Welcome, to Admin Panel
+        </span>
+        <a class="btn btn-danger ml-2" th:href="@{/library}">Log Out</a>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h1>Authors</h1>
+    <form th:action="@{/author/authors/add}" th:method="post" th:object="${author}">
+        <div class="form-group">
+            <label for="authorName">Name:</label>
+            <input type="text" th:field="*{name}" class="form-control" id="authorName" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="authorDescription">Description:</label>
+            <textarea class="form-control" th:field="*{description}" id="authorDescription" name="description" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Author</button>
+    </form>
+    <hr>
+    <!-- Таблица для отображения списка авторов -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Итерация по списку авторов и отображение данных -->
+        <tr th:each="author : ${authors}">
+            <td th:text="${author.getName()}"></td>
+            <td th:text="${author.getDescription()}"></td>
+            <td>
+                <!-- Проверка наличия книг у автора -->
+                <th:block th:if="${#lists.size(author.getBooks()) == 0}">
+                    <!-- Форма для удаления автора, если у него нет книг -->
+                    <form th:action="@{/author/authors/delete}" method="post">
+                        <input type="hidden" name="id" th:value="${author.id}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </th:block>
+                <th:block th:unless="${#lists.size(author.getBooks()) == 0}">
+                    <!-- Сообщение о невозможности удаления автора -->
+                    <span th:text="'You cannot delete this author because they have books.'" class="text-danger"></span>
+                </th:block>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

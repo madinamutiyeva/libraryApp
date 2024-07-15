@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>Login</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Вход</h1>
+    <!-- Если у пользователя нет аккаунта -->
+    <p class="text-danger">Если у вас нет аккаунта, пожалуйста, зарегистрируйтесь.</p>
+    <form th:action="@{/library/login}" th:method="POST">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" th:object="${email}" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" th:object="${password}" class="form-control" id="password" name="password" required>
+        </div>
+        <p th:if="${error}" class="text-danger" th:text="${error}"></p>
+        <button type="submit" class="btn btn-primary mr-2">Войти</button>
+        <a th:href="@{/library/register}" class="btn btn-secondary">Зарегистрироваться</a>
+    </form>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

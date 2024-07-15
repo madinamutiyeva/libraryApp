@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Profile</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Cart</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h1>Welcome, <span th:text="${user.fullName}"></span>!</h1>
+    <form th:action="@{/user/search}" th:method="get">
+        <input type="hidden" name="userId" th:value="${user.id}">
+        <label>
+            <input type="text" name="query" class="form-control mb-3" placeholder="Search for books..." th:value="${query}">
+        </label>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    <div th:if="${not #lists.isEmpty(searchResults)}">
+        <h2>Search Results</h2>
+        <ul class="list-group">
+            <li th:each="book : ${searchResults}" class="list-group-item">
+                    <h3 th:text="${book.name}"></h3>
+                    <h3 th:text="${book.description}"></h3>
+                <form th:action="@{/user/add}" th:method="post">
+                        <input type="hidden" name="bookId" th:value="${book.getId()}">
+                        <input type="hidden" name="userId" th:value="${user.id}">
+                        <button type="submit" class="btn btn-success">Add to Cart</button>
+                    </form>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${#lists.isEmpty(searchResults)}">
+        <p>No books found.</p>
+    </div>
+
+    <table class="table" th:if="${not #lists.isEmpty(userBooks)}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Итерация по списку издателей и отображение данных -->
+        <tr th:each="b : ${userBooks}">
+            <td th:text="${b.name}"></td>
+            <td>
+                <!-- Форма для удаления издателя -->
+                <form th:action="@{/user/delete}" th:method="post">
+                    <input type="hidden" name="deleteId" th:value="${b.id}">
+                    <input type="hidden" name="userId" th:value="${user.id}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
